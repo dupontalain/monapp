@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: flask-webmail
+    env: python
+    buildCommand: ""
+    startCommand: "python app.py"
+    envVars:
+      - key: JWT_SECRET
+        value: supersecret123
+      - key: FERNET_KEY
+        value: c69WdueCMvDHsGy869XE0aC-ng_idNLgDSg8cHguTCU=
