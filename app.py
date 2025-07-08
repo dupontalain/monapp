@@ -73,7 +73,15 @@ def fetch_emails(mail, folder="INBOX", limit=10):
 def home():
     token = request.args.get("token")
     if not token:
-        return redirect("https://google.com")
+        return "⛔ Accès interdit : token manquant."
+
+    try:
+        decoded = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        user_id = decoded["user_id"]
+    except jwt.ExpiredSignatureError:
+        return "⛔ Token expiré."
+    except jwt.InvalidTokenError:
+        return "⛔ Token invalide."
 
     try:
         decoded = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
