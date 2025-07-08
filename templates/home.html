@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>📬 Accès Webmail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        header {
+            background-color: #1f1f1f;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 12px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 6px;
+            border: none;
+            background-color: #2e2e2e;
+            color: #fff;
+            font-size: 1rem;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #0052a3;
+        }
+    </style>
+</head>
+<body>
+    <header>📨 Boîtes Mail Disponibles</header>
+
+    <div class="container">
+        <h2>Choisissez une adresse à consulter</h2>
+
+        <form method="GET" action="{{ url_for('inbox') }}">
+            <div class="form-group">
+                <select name="email" required>
+                    {% for email in emails %}
+                    <option value="{{ email }}">{{ email }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="user_id" value="{{ user_id }}">
+                <input type="hidden" name="folder" value="INBOX">
+                <button type="submit">📥 Accéder à la boîte</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

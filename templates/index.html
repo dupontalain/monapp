@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>📬 Boîte Mail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        header {
+            background-color: #1f1f1f;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
+        h2 {
+            text-align: center;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        .mail-item {
+            border-bottom: 1px solid #333;
+            padding: 15px 10px;
+        }
+        .mail-item:last-child {
+            border-bottom: none;
+        }
+        .mail-item h3 {
+            margin: 0 0 5px;
+            font-size: 1.1rem;
+            color: #f1f1f1;
+        }
+        .mail-item p {
+            margin: 2px 0;
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .pagination a {
+            padding: 10px 15px;
+            background-color: #2e2e2e;
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        .pagination a:hover {
+            background-color: #444;
+        }
+        .folder-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .folder-selector select {
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            background-color: #2e2e2e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>📧 WebMail Viewer</header>
+
+    <div class="container">
+        <h2>{{ email }} – {{ folder }}</h2>
+
+        <div class="folder-selector">
+            <form method="GET" action="{{ url_for('inbox') }}">
+                <input type="hidden" name="user_id" value="{{ user_id }}">
+                <input type="hidden" name="email" value="{{ email }}">
+                <select name="folder" onchange="this.form.submit()">
+                    {% for f in folders %}
+                        <option value="{{ f }}" {% if f == folder %}selected{% endif %}>{{ f }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        {% for mail in mails %}
+        <div class="mail-item">
+            <h3>📨 {{ mail.subject or "(Sans sujet)" }}</h3>
+            <p><strong>De :</strong> {{ mail.sender }}</p>
+            <p><strong>Date :</strong> {{ mail.date }}</p>
+            <p>{{ mail.snippet }}</p>
+        </div>
+        {% endfor %}
+
+        <div class="pagination">
+            {% if page > 1 %}
+            <a href="{{ url_for('inbox', user_id=user_id, email=email, folder=folder, page=page-1) }}">← Précédent</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+
+            <a href="{{ url_for('inbox', user_id=user_id, email=email, folder=folder, page=page+1) }}">Suivant →</a>
+        </div>
+    </div>
+</body>
+</html>
