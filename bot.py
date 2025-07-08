@@ -32,7 +32,7 @@ ADMIN_LOG_CHAT_ID = int(os.getenv('ADMIN_LOG_CHAT_ID'))
 DB_NAME = os.getenv('DB_NAME', 'imap_bot.db')
 FERNET_KEY = os.getenv("FERNET_KEY")
 WEBAPP_URL = os.getenv('WEBAPP_URL', 'https://votre-domaine.com')
-
+JWT_SECRET = os.getenv("JWT_SECRET")
 # Vérifications
 required_vars = {
     'TELEGRAM_BOT_TOKEN': TELEGRAM_BOT_TOKEN,
