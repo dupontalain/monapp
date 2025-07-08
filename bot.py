@@ -4,6 +4,8 @@ import sqlite3
 import base64
 import os
 import json
+import jwt
+import time
 import urllib.parse
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
@@ -902,6 +904,14 @@ async def show_profil(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(btns), parse_mode='Markdown')
     await log(context.application, "👤 Consultation du profil utilisateur", user_id)
 
+
+def generate_token(user_id):
+    payload = {
+        "user_id": user_id,
+        "exp": time.time() + 3600  # expiration dans 1h
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
 async def show_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Affichage des webmails par catégorie"""
     query = update.callback_query
@@ -945,12 +955,14 @@ async def show_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Construire les boutons WebApp, 2 par ligne
     webmail_buttons = []
     for email_addr, enc_pwd in rows:
-        # Extraire le nom du domaine pour l'affichage
         domain = email_addr.split('@')[1].split('.')[0].capitalize()
         
-        # Créer l'URL de la webapp avec les paramètres
-        webapp_url = f"{WEBAPP_URL}?user_id={user_id}&email={urllib.parse.quote(email_addr)}&category={urllib.parse.quote(cat_db)}"
-        
+        # Générer un token sécurisé pour l'utilisateur
+        token = generate_token(user_id)
+
+        # URL sécurisée avec le token JWT (plus besoin de passer user_id/email dans l'URL ici)
+        webapp_url = f"{WEBAPP_URL}?token={token}"
+
         webmail_buttons.append(
             InlineKeyboardButton(
                 text=f"✉️ {domain}",

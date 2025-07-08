@@ -83,14 +83,6 @@ def home():
     except jwt.InvalidTokenError:
         return "⛔ Token invalide."
 
-    try:
-        decoded = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        user_id = decoded["user_id"]
-    except jwt.ExpiredSignatureError:
-        return "⛔ Token expiré."
-    except jwt.InvalidTokenError:
-        return "⛔ Token invalide."
-
     db = get_db()
     cur = db.cursor()
     cur.execute("SELECT email FROM webmails WHERE active = 1")
@@ -98,6 +90,7 @@ def home():
     db.close()
 
     return render_template("home.html", emails=emails, user_id=user_id)
+
 
 @app.route("/inbox")
 def inbox():
