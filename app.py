@@ -19,6 +19,10 @@ fernet = Fernet(FERNET_KEY)
 
 app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return "✅ App Flask déployée avec succès !"
+
 # 🔒 Générer un JWT sécurisé après vérif licence + mot de passe
 @app.route("/auth")
 def auth():
